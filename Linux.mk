@@ -12,18 +12,10 @@ LOCAL_C_INCLUDES := $(LOCAL_PATH)/lua/
 
 LOCAL_EXPORT_C_INCLUDES := $(LOCAL_PATH)
 
-ifeq ($(DEBUG),1)
-LOCAL_CFLAGS := -D__PLATFORM__Linux \
-                -DLUA_COMPAT_ALL \
+LOCAL_CFLAGS := -DLUA_COMPAT_ALL \
                 -DLUA_USE_LINUX \
-                -DLUA_VERSION_TAG_NAME="\"5.2-debug\"" \
+                -DLUA_VERSION_TAG_NAME="\"5.2-$(BUILD_DIRECTORY_MODE)\"" \
                 -Wall
-else
-LOCAL_CFLAGS := -D__PLATFORM__Linux \
-                -DLUA_COMPAT_ALL \
-                -DLUA_VERSION_TAG_NAME="\"5.2-release\"" \
-                -DLUA_USE_LINUX
-endif
 
 # load the common sources file of the platform
 include $(LOCAL_PATH)/file.mk
