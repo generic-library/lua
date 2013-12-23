@@ -2,32 +2,36 @@
 # --------------------------------------------------------
 # -- Linear Math librairy
 # --------------------------------------------------------
-import lutinModule
-import lutinTools
+import lutinModule as module
+import lutinTools as tools
 
-def Create(target):
-	myModule = lutinModule.module(__file__, 'lua', 'LIBRARY')
+def get_desc():
+	return "Lua Lua interpretic script module"
+
+
+def create(target):
+	myModule = module.Module(__file__, 'lua', 'LIBRARY')
 	
-	myModule.AddModuleDepend('etk')
+	myModule.add_module_depend('etk')
 	
-	myModule.CompileFlags_CC([
+	myModule.compile_flags_CC([
 		'-DLUA_VERSION_TAG_NAME="\"5.2\""',
 		'-Wall'])
 	
-	myModule.AddExportPath(lutinTools.GetCurrentPath(__file__))
-	myModule.AddPath(lutinTools.GetCurrentPath(__file__)+"/lua/")
+	myModule.add_export_path(tools.get_current_path(__file__))
+	myModule.add_path(tools.get_current_path(__file__)+"/lua/")
 	
 	
-	myModule.AddExportFlag_CC('-DLUA_COMPAT_ALL');
+	myModule.add_export_flag_CC('-DLUA_COMPAT_ALL');
 	
 	#ifeq ("$(TARGET_OS)","Windows")
-	#	myModule.CompileFlags_CC('-D_WIN32')
+	#	myModule.compile_flags_CC('-D_WIN32')
 	#else
-	myModule.CompileFlags_CC('-DLUA_USE_LINUX')
+	myModule.compile_flags_CC('-DLUA_USE_LINUX')
 	#endif
 	
 	
-	myModule.AddSrcFile([
+	myModule.add_src_file([
 		'lua/lapi.cpp',
 		'lua/lauxlib.cpp',
 		'lua/lbaselib.cpp',
