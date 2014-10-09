@@ -18,7 +18,7 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
-#include <etk/Debug.h>
+#include <etk/debug.h>
 
 
 static int luaB_print (lua_State *L) {
@@ -43,10 +43,9 @@ static int luaB_print (lua_State *L) {
   }
   luai_writeline();
   #else
+	std::stringbuf sb;
+	std::ostream tmpStream(&sb);
 	lua_getglobal(L, "tostring");
-	etk::cout << etk::cstart << etk::LOG_LEVEL_INFO;
-	TOOLS_DisplayTime();
-	TOOLS_DisplayFuncName(__LINE__, __class__, __func__, "luaFile  ");
 	for (i=1; i<=n; i++) {
 		const char *s;
 		size_t l;
@@ -57,11 +56,13 @@ static int luaB_print (lua_State *L) {
 		if (s == NULL) {
 			return luaL_error(L, LUA_QL("tostring") " must return a string to " LUA_QL("print"));
 		}
-		if (i>1) etk::cout << "\t";
-		etk::cout << s;
+		if (i>1) {
+			tmpStream << "\t";
+		}
+		tmpStream << s;
 		lua_pop(L, 1);  /* pop result */
 	}
-	etk::cout <<etk::endl;
+	etk::log::logStream(etk::getLogId(), 4, __LINE__, __class__, __func__, tmpStream);
   #endif
   return 0;
 }
