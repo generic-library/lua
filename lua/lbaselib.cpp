@@ -18,8 +18,14 @@
 
 #include "lauxlib.h"
 #include "lualib.h"
-#include <etk/debug.h>
+#include <elog/log.hpp>
 
+namespace lua {
+	int32_t getLogId() {
+		static int32_t g_val = elog::registerInstance("lua");
+		return g_val;
+	}
+}
 
 static int luaB_print (lua_State *L) {
   int n = lua_gettop(L);  /* number of arguments */
@@ -43,8 +49,7 @@ static int luaB_print (lua_State *L) {
   }
   luai_writeline();
   #else
-	std::stringbuf sb;
-	std::ostream tmpStream(&sb);
+	etk::Stream tmpStream;
 	lua_getglobal(L, "tostring");
 	for (i=1; i<=n; i++) {
 		const char *s;
@@ -62,7 +67,7 @@ static int luaB_print (lua_State *L) {
 		tmpStream << s;
 		lua_pop(L, 1);  /* pop result */
 	}
-	etk::log::logStream(etk::getLogId(), 4, __LINE__, __class__, __func__, tmpStream);
+	elog::logStream(lua::getLogId(), 4, __LINE__, __PRETTY_FUNCTION__, tmpStream);
   #endif
   return 0;
 }
